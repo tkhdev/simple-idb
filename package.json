@@ -1,5 +1,5 @@
 {
-  "name": "simple-idb",
+  "name": "@tkhdev/simple-idb",
   "version": "1.1.0",
   "description": "A lightweight, promise-based wrapper for IndexedDB",
   "type": "module",

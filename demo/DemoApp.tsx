@@ -400,7 +400,7 @@ await db.clear('users');`}
           <a href="https://github.com/tkhdev/simple-idb" style={{ color: '#93c5fd' }}>
             GitHub
           </a>
-          <a href="https://www.npmjs.com/package/simple-idb" style={{ color: '#93c5fd' }}>
+          <a href="https://www.npmjs.com/package/@tkhdev/simple-idb" style={{ color: '#93c5fd' }}>
             npm
           </a>
         </footer>

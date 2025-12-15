@@ -1,22 +1,22 @@
 # simple-idb
 
-[![npm version](https://img.shields.io/npm/v/simple-idb.svg)](https://www.npmjs.com/package/simple-idb)
-[![npm downloads](https://img.shields.io/npm/dm/simple-idb.svg)](https://www.npmjs.com/package/simple-idb)
-[![bundle size](https://img.shields.io/bundlephobia/minzip/simple-idb?label=bundle%20size)](https://bundlephobia.com/package/simple-idb)
-[![license](https://img.shields.io/npm/l/simple-idb.svg)](https://github.com/tkhdev/simple-idb/blob/main/LICENSE)
+[![npm version](https://img.shields.io/npm/v/%40tkhdev%2Fsimple-idb.svg)](https://www.npmjs.com/package/@tkhdev/simple-idb)
+[![npm downloads](https://img.shields.io/npm/dm/%40tkhdev%2Fsimple-idb.svg)](https://www.npmjs.com/package/@tkhdev/simple-idb)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/%40tkhdev%2Fsimple-idb?label=bundle%20size)](https://bundlephobia.com/package/@tkhdev/simple-idb)
+[![license](https://img.shields.io/npm/l/%40tkhdev%2Fsimple-idb.svg)](https://github.com/tkhdev/simple-idb/blob/main/LICENSE)
 
 A lightweight, promise-based wrapper for IndexedDB. Minimal, bulletproof, and easy to use.
 
 ## Installation
 
 ```bash
-npm install simple-idb
+npm install @tkhdev/simple-idb
 ```
 
 ## Usage
 
 ```javascript
-import SimpleIDB from 'simple-idb';
+import SimpleIDB from '@tkhdev/simple-idb';
 
 const db = new SimpleIDB();
 
@@ -111,7 +111,7 @@ This repo includes a small React demo + documentation page built with Vite. It r
 
 - Live demo (Vercel): https://simple-idb.vercel.app
 - GitHub: https://github.com/tkhdev/simple-idb
-- npm: https://www.npmjs.com/package/simple-idb
+- npm: https://www.npmjs.com/package/@tkhdev/simple-idb
 
 ### Run the demo locally
 
