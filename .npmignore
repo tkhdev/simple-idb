@@ -1,0 +1,14 @@
+src/
+demo/
+*.test.ts
+*.config.js
+tsconfig.json
+jest.config.cjs
+.gitignore
+.npmignore
+coverage/
+node_modules/
+
+
+
+

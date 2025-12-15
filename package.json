@@ -1,0 +1,55 @@
+{
+  "name": "simple-idb",
+  "version": "1.1.0",
+  "description": "A lightweight, promise-based wrapper for IndexedDB",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "build:demo": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "keywords": [
+    "indexeddb",
+    "wrapper",
+    "storage",
+    "browser",
+    "promise"
+  ],
+  "author": "Tymur Khamitov",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/react": "^18.3.11",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@types/jest": "^29.5.11",
+    "@types/node": "^20.10.6",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "rollup": "^4.6.1",
+    "ts-jest": "^29.1.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.4.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tkhdev/simple-idb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tkhdev/simple-idb/issues"
+  },
+  "homepage": "https://simple-idb.vercel.app"
+}
