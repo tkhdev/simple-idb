@@ -109,7 +109,7 @@ const user = await db.get('users', 1);
 
 This repo includes a small React demo + documentation page built with Vite. It runs entirely in the browser and uses the same library code you install from npm.
 
-- Live demo (Vercel): https://simple-idb.vercel.app
+- Live demo: https://simple-idb.vercel.app
 - GitHub: https://github.com/tkhdev/simple-idb
 - npm: https://www.npmjs.com/package/@tkhdev/simple-idb
 
@@ -125,19 +125,6 @@ Then open the printed `http://localhost:xxxx` URL in your browser. The page:
 - Opens a demo database (`simple-idb-demo`)
 - Creates a `users` store with `keyPath: "id"`
 - Lets you add and read users using the live `simple-idb` API
-
-### Build the demo for deployment
-
-This is the build you can deploy to Vercel or any static host:
-
-```bash
-npm run build:demo
-```
-
-The static assets will be emitted into `demo-dist/`. On Vercel, you can:
-
-- Set **Build Command** to `npm run build:demo`
-- Set **Output Directory** to `demo-dist`
 
 ### `close(): void`
 

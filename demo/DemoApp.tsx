@@ -395,7 +395,7 @@ await db.clear('users');`}
         >
           <span>Links:</span>
           <a href="https://simple-idb.vercel.app" style={{ color: '#93c5fd' }}>
-            Demo (Vercel)
+            Demo
           </a>
           <a href="https://github.com/tkhdev/simple-idb" style={{ color: '#93c5fd' }}>
             GitHub
