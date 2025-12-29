@@ -21,9 +21,11 @@ import SimpleIDB from '@tkhdev/simple-idb';
 const db = new SimpleIDB();
 
 // Open database and create stores during upgrade
-await db.open('my-database', 1, () => {
+await db.open('my-database', 2, () => {
   db.createStore('users', { keyPath: 'id' });
   db.createStore('posts', { autoIncrement: true });
+  // Create indexes (v1.2.0)
+  db.createIndex('users', 'email', 'email', { unique: true });
 });
 
 // Add a record
@@ -32,6 +34,12 @@ await db.add('users', { id: '1', name: 'John Doe', email: 'john@example.com' });
 // Get a record
 const user = await db.get('users', '1');
 console.log(user);
+
+// Get all records (v1.2.0)
+const allUsers = await db.getAll('users');
+
+// Count records (v1.2.0)
+const count = await db.count('users');
 
 // Close database
 db.close();
@@ -105,6 +113,44 @@ Retrieves a record by key from the specified store. Returns `undefined` if the k
 const user = await db.get('users', 1);
 ```
 
+### `getAll(storeName: string): Promise<any[]>` *(v1.2.0)*
+
+Retrieves all records from the specified store. Returns an empty array if the store is empty.
+
+```javascript
+const allUsers = await db.getAll('users');
+// Returns: [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }, ...]
+```
+
+### `count(storeName: string): Promise<number>` *(v1.2.0)*
+
+Returns the number of records in the specified store.
+
+```javascript
+const count = await db.count('users');
+// Returns: 5
+```
+
+### `createIndex(storeName: string, indexName: string, keyPath: string, options?: IndexOptions): void` *(v1.2.0)*
+
+Creates an index on an object store. Must be called within the `upgradeCallback` during `open()`. Indexes can only be created during database upgrades.
+
+**Options:**
+- `unique?: boolean` - Whether the index should enforce uniqueness (default: `false`)
+- `multiEntry?: boolean` - Whether the index should support multiple entries per key (default: `false`)
+
+```javascript
+await db.open('my-db', 2, () => {
+  db.createStore('users', { keyPath: 'id' });
+  // Create a unique index on email
+  db.createIndex('users', 'email', 'email', { unique: true });
+  // Create a regular index on age
+  db.createIndex('users', 'age', 'age');
+});
+```
+
+**Note:** Indexes can only be created during database upgrades. If you need to add an index to an existing database, increment the version number when calling `open()`.
+
 ## Demo & documentation
 
 This repo includes a small React demo + documentation page built with Vite. It runs entirely in the browser and uses the same library code you install from npm.
@@ -123,8 +169,9 @@ npm run dev
 Then open the printed `http://localhost:xxxx` URL in your browser. The page:
 
 - Opens a demo database (`simple-idb-demo`)
-- Creates a `users` store with `keyPath: "id"`
-- Lets you add and read users using the live `simple-idb` API
+- Creates a `users` store with `keyPath: "id"` and indexes on `email` and `age`
+- Demonstrates all CRUD operations and v1.2.0 querying features (`getAll`, `count`)
+- Shows live examples of all API methods
 
 ### `close(): void`
 

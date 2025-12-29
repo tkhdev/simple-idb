@@ -3,10 +3,18 @@ export interface StoreOptions {
   autoIncrement?: boolean;
 }
 
+export interface IndexOptions {
+  unique?: boolean;
+  multiEntry?: boolean;
+}
+
 export type UpgradeCallback = (db: IDBDatabase) => void;
+
+export type IDBKey = IDBValidKey;
 
 class SimpleIDB {
   private db: IDBDatabase | null = null;
+  private upgradeTransaction: IDBTransaction | null = null;
 
   async open(dbName: string, version: number, upgradeCallback?: UpgradeCallback): Promise<void> {
     if (!('indexedDB' in self)) {
@@ -19,11 +27,14 @@ class SimpleIDB {
       request.onerror = () => reject(new Error(`Failed to open database: ${request.error?.message || 'Unknown error'}`));
       request.onsuccess = () => {
         this.db = request.result;
+        this.upgradeTransaction = null;
         resolve();
       };
       request.onupgradeneeded = (event) => {
         this.db = (event.target as IDBOpenDBRequest).result;
+        this.upgradeTransaction = (event.target as IDBOpenDBRequest).transaction;
         upgradeCallback?.(this.db);
+        this.upgradeTransaction = null;
       };
     });
   }
@@ -41,7 +52,33 @@ class SimpleIDB {
     });
   }
 
-  async add(storeName: string, data: any): Promise<void> {
+  createIndex(storeName: string, indexName: string, keyPath: string, options?: IndexOptions): void {
+    if (!this.db) {
+      throw new Error('Database not open. Call open() first.');
+    }
+    if (!this.db.objectStoreNames.contains(storeName)) {
+      throw new Error(`Object store "${storeName}" does not exist. Create it first with createStore().`);
+    }
+
+    let objectStore: IDBObjectStore;
+    
+    if (this.upgradeTransaction) {
+      objectStore = this.upgradeTransaction.objectStore(storeName);
+    } else {
+      throw new Error('createIndex must be called within the upgradeCallback during open(). Indexes can only be created during database upgrades.');
+    }
+
+    if (objectStore.indexNames.contains(indexName)) {
+      return;
+    }
+
+    objectStore.createIndex(indexName, keyPath, {
+      unique: options?.unique ?? false,
+      multiEntry: options?.multiEntry ?? false
+    });
+  }
+
+  async add<T = unknown>(storeName: string, data: T): Promise<void> {
     if (!this.db) {
       throw new Error('Database not open. Call open() first.');
     }
@@ -54,7 +91,7 @@ class SimpleIDB {
     });
   }
 
-  async get(storeName: string, key: any): Promise<any> {
+  async get<T = unknown>(storeName: string, key: IDBKey): Promise<T | undefined> {
     if (!this.db) {
       throw new Error('Database not open. Call open() first.');
     }
@@ -63,11 +100,11 @@ class SimpleIDB {
       const store = transaction.objectStore(storeName);
       const request = store.get(key);
       request.onerror = () => reject(new Error(`Failed to get record: ${request.error?.message || 'Unknown error'}`));
-      request.onsuccess = () => resolve(request.result);
+      request.onsuccess = () => resolve(request.result as T | undefined);
     });
   }
 
-  async put(storeName: string, data: any): Promise<void> {
+  async put<T = unknown>(storeName: string, data: T): Promise<void> {
     if (!this.db) {
       throw new Error('Database not open. Call open() first.');
     }
@@ -80,7 +117,7 @@ class SimpleIDB {
     });
   }
 
-  async delete(storeName: string, key: any): Promise<void> {
+  async delete(storeName: string, key: IDBKey): Promise<void> {
     if (!this.db) {
       throw new Error('Database not open. Call open() first.');
     }
@@ -103,6 +140,32 @@ class SimpleIDB {
       const request = store.clear();
       request.onerror = () => reject(new Error(`Failed to clear store: ${request.error?.message || 'Unknown error'}`));
       request.onsuccess = () => resolve();
+    });
+  }
+
+  async getAll<T = unknown>(storeName: string): Promise<T[]> {
+    if (!this.db) {
+      throw new Error('Database not open. Call open() first.');
+    }
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction([storeName], 'readonly');
+      const store = transaction.objectStore(storeName);
+      const request = store.getAll();
+      request.onerror = () => reject(new Error(`Failed to get all records: ${request.error?.message || 'Unknown error'}`));
+      request.onsuccess = () => resolve(request.result as T[]);
+    });
+  }
+
+  async count(storeName: string): Promise<number> {
+    if (!this.db) {
+      throw new Error('Database not open. Call open() first.');
+    }
+    return new Promise((resolve, reject) => {
+      const transaction = this.db!.transaction([storeName], 'readonly');
+      const store = transaction.objectStore(storeName);
+      const request = store.count();
+      request.onerror = () => reject(new Error(`Failed to count records: ${request.error?.message || 'Unknown error'}`));
+      request.onsuccess = () => resolve(request.result);
     });
   }
 
